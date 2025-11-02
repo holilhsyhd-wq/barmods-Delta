@@ -4,6 +4,6 @@
   "description": "A multi-tool app with Vercel backend",
   "dependencies": {
     "@google/generative-ai": "^0.11.3",
-    "tiktok-grabber-without-watermark": "^1.1.2"
+    "@bochilteam/scraper": "^4.2.4"
   }
 }
