@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rasa sakit ini tidak gratis</title>
+    <style>
+        /* CSS untuk Tampilan */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --bg-color: #1a1a2e;
+            --primary-color: #9f00ff; /* Ungu cerah */
+            --card-bg: #2a2a4e;
+            --text-color: #f0f0f0;
+            --input-bg: #1e1e3f;
+            --border-color: #4a4a7e;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0; 
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        #interaction-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        #loading-screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        #login-screen {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        #login-error {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 15px;
+            display: none; 
+        }
+
+        .container {
+            display: none; 
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            margin: 20px;
+        }
+
+        .header-video {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            background-color: #000;
+            object-fit: cover;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+        }
+
+        .tab-nav {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 70px; /* Dikecilkan sedikit untuk 5 tab */
+            padding: 10px 5px;
+            background-color: transparent;
+            border: none;
+            color: #c0c0e0;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            font-weight: 700;
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #c0c0e0;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(159, 0, 255, 0.3);
+        }
+
+        select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M1.41%200.58L6%205.17L10.59%200.58L12%202L6%208L0%202L1.41%200.58Z%22%20fill%3D%22%239F00FF%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+        }
+        
+        select.form-control option {
+            word-break: break-all;
+            white-space: normal;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        
+        .btn-submit:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            gap: 10px;
+        }
+
+        .side-image {
+            width: 48%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        /* CSS Untuk Hasil (AI, TikTok, IP) */
+        #ai-result, #tiktok-result, #ip-result {
+            font-size: 0.95rem;
+            color: #c0c0e0;
+            text-align: left;
+            line-height: 1.6;
+            background-color: var(--input-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            word-wrap: break-word;
+            min-height: 50px;
+        }
+        
+        #ai-result {
+             white-space: pre-wrap;
+             overflow-y: auto;
+        }
+        
+        .download-link {
+            display: block;
+            margin-top: 15px;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .download-link:hover {
+            background-color: #8a00e0;
+        }
+
+        /* [BARU] Tabel untuk hasil IP Lookup */
+        #ip-result-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #ip-result-table td {
+            padding: 8px 4px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        #ip-result-table td:first-child {
+            font-weight: 700;
+            color: white;
+            width: 30%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="interaction-screen">
+        </div>
+
+    <div id="loading-screen">
+        <video id="intro-video" playsinline preload="auto"> 
+            <source src="https://files.catbox.moe/0ik9wn.mp4" type="video/mp4">
+            Browser Anda tidak mendukung video.
+        </video>
+    </div>
+
+    <div id="login-screen">
+        <div class="login-box"> 
+            <h1>Login Access</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-submit">Masuk</button>
+                <p id="login-error">Username atau password salah.</p>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="container" id="main-app-container">
+
+        <video class="header-video" autoplay loop muted playsinline>
+            <source src="https://files.catbox.moe/0ik9wn.mp4" type="video/mp4">
+            Browser Anda tidak mendukung tag video.
+        </video>
+        <h1>barmods X code</h1>
+
+        <div class="tab-nav">
+            <button class="tab-button active" data-tab="tab-wa">Kirim Pesan</button>
+            <button class="tab-button" data-tab="tab-osint">OSINT</button>
+            <button class="tab-button" data-tab="tab-tiktok">TikTok DL</button>
+            <button class="tab-button" data-tab="tab-ip">IP Lookup</button> <button class="tab-button" data-tab="tab-ai">AI Chat</button>
+        </div>
+
+        <div id="tab-wa" class="tab-content active">
+            <form id="waForm">
+                <div class="form-group">
+                    <label for="phone">Target Number</label>
+                    <input type="text" id="phone" class="form-control" placeholder="Contoh: 628123456789" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="template">Pilih metode bug</label>
+                    <select id="template" class="form-control" required>
+                        <option value="" disabled selected>by barmods</option>
+                        <option value="BARMODS AmpasꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾYFailure">delay biasa</option>
+                        <option value="blm gw set">delta 2023</option>
+                        <option value="masih proses?">blank</option>
+                        <option value="crash">crash</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">gass bug</button>
+            </form>
+        </div>
+
+        <div id="tab-osint" class="tab-content">
+            <form id="osintForm">
+                <div class="form-group">
+                    <label for="osint-phone">Target Number</label>
+                    <input type="text" id="osint-phone" class="form-control" placeholder="Tempel nomor dari tab 'Kirim Pesan'">
+Dork</button>
+            </form>
+        </div>
+
+        <div id="tab-tiktok" class="tab-content">
+            <form id="tiktokForm">
+                <div class="form-group">
+                    <label for="tiktok-url">Tempel URL Video TikTok</label>
+                    <input type="url" id="tiktok-url" class="form-control" placeholder="Contoh: https://www.tiktok.com/..." required>
+                </div>
+                <button type="submit" id="tiktok-submit-btn" class="btn-submit">Unduh Tanpa WM</button>
+            </form>
+            <div id="tiktok-result" style="margin-top: 20px;">
+                </div>
+        </div>
+
+        <div id="tab-ip" class="tab-content">
+            <form id="ipForm">
+                <div class="form-group">
+                    <label for="ip-address">Masukkan IP Address atau Domain</label>
+                    <input type="text" id="ip-address" class="form-control" placeholder="Contoh: 8.8.8.8 atau google.com" required>
+                </div>
+                <button type="submit" id="ip-submit-btn" class="btn-submit">Lacak IP</button>
+            </form>
+            <div id="ip-result" style="margin-top: 20px;">
+                </div>
+        </div>
+
+
+        <div id="tab-ai" class.content">
+            <form id="aiForm">
+                <div class.group">
+                    <label for="ai-prompt">Tanya Apa Saja ke AI</label>
+                    <textarea id="ai-prompt" class.control" rows="3" placeholder="Contoh: jelaskan apa itu OSINT"></textarea>
+                </div>
+                <button type="submit" id="ai-submit-btn" class.submit">Kirim ke AI</button>
+            </form>
+            <div class.group" style="margin-top: 20px;">
+                <label for="ai-result">Jawaban AI:</label>
+                <div id="ai-result">Waiting for prompt...</div>
+            </div>
+        </div>
+
+        <div class="image-container">
+            <img src="https://img1.pixhost.to/images/9872/657034725_offc.jpg" alt="Foto 1" class.image">
+            <img src="https://img1.pixhost.to/images/9872/657034725_offc.jpg" alt="Foto 2" class.image">
+        </div>
+    </div>
+
+    <audio id="background-music" loop preload="auto">
+        <source src="https://files.catbox.moe/27r5rt.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Menjalankan script setelah semua HTML dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- ELEMEN LOADING, LOGIN & AUDIO ---
+            const interactionScreen = document.getElementById('interaction-screen');
+            const loadingScreen = document.getElementById('loading-screen');
+            const introVideo = document.getElementById('intro-video');
+            const loginScreen = document.getElementById('login-screen');
+            const mainApp = document.getElementById('main-app-container');
+            const loginForm = document.getElementById('loginForm');
+            const loginError = document.getElementById('login-error');
+            const backgroundMusic = document.getElementById('background-music'); 
+
+            // --- LOGIKA LOADING & LOGIN (Metode 2) ---
+            
+            // 1. Tampilkan layar interaksi (layar hitam)
+            interactionScreen.addEventListener('click', () => {
+                interactionScreen.style.display = 'none'; 
+                loadingScreen.style.display = 'flex';
+                
+                var playPromise = introVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn("Autoplay video dengan suara gagal:", error);
+                        introVideo.muted = true;
+                        introVideo.play();
+                    });
+                }
+            }, { once: true }); 
+
+            // 2. Saat video selesai diputar
+            introVideo.onended = () => { showLogin(); };
+
+            // 3. Cadangan jika video error
+            introVideo.onerror = () => { showLogin(); };
+            
+            // Fungsi untuk menampilkan login
+            function showLogin() {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500); 
+
+                loginScreen.style.display = 'flex';
+                document.body.style.overflow = 'auto'; 
+            }
+
+            // 4. Saat tombol login diklik
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const user = document.getElementById('username').value;
+                const pass = document.getElementById('password').value;
+
+                if (user === 'barmods21' && pass === 'barmods') {
+                    loginScreen.style.display = 'none';
+                    mainApp.style.display = 'block'; 
+                    backgroundMusic.play().catch(error => {
+                        console.warn("Autoplay musik latar gagal:", error);
+                    });
+                } else {
+                    loginError.style.display = 'block';
+                }
+            });
+
+
+            // --- FUNGSI UNTUK MEMBERSIHKAN NOMOR TELEPON ---
+            function cleanPhoneNumber(phone) {
+                let cleanPhone = phone.replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) {
+                    cleanPhone = '62' + cleanPhone.substring(1);
+                } else if (!cleanPhone.startsWith('62')) {
+                    cleanPhone = '62' + cleanPhone;
+                }
+                return cleanPhone;
+            }
+
+            // --- FUNGSI UNTUK TAB ---
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    button.classList.add('active');
+                    document.getElementById(button.dataset.tab).classList.add('active');
+                });
+            });
+            
+            // --- TAB 1: KIRIM PESAN ---
+            document.getElementById('waForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                let phone = document.getElementById('phone').value;
+                let message = document.getElementById('template').value;
+                let cleanPhone = cleanPhoneNumber(phone);
+                document.getElementById('osint-phone').value = cleanPhone;
+                let encodedMessage = encodeURIComponent(message);
+                const waURL = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+                window.open(waURL, '_blank');
+            });
+
+            // --- TAB 2: OSINT (GOOGLE DORK) ---
+            document.getElementById('osintForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                let phone = document.getElementById('osint-phone').value;
+                if (!phone) {
+                    alert('Masukkan nomor telepon terlebih dahulu.');
+                    return;
+                }
+                let cleanPhone = cleanPhoneNumber(phone);
+                let query = `"${cleanPhone}" OR "${'0' + cleanPhone.substring(2)}"`;
+                let sites = ['facebook.com', 'instagram.com', 'tiktok.com', 'twitter.com', 'linkedin.com', 'getcontact.com', 'truecaller.com'];
+                let siteQuery = sites.map(site => `site:${site}`).join(' OR ');
+                let finalQuery = `(${query}) AND (${siteQuery})`;
+                const searchURL = `https://www.google.com/search?q=${encodeURIComponent(finalQuery)}`;
+                window.open(searchURL, '_blank');
+            });
+
+            // --- TAB 3: TIKTOK DOWNLOADER ---
+            const tiktokForm = document.getElementById('tiktokForm');
+            const tiktokSubmitBtn = document.getElementById('tiktok-submit-btn');
+            const tiktokResultDiv = document.getElementById('tiktok-result');
+
+            tiktokForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const url = document.getElementById('tiktok-url').value;
+                if (!url) {
+                    tiktokResultDiv.innerHTML = "Silakan masukkan URL TikTok.";
+                    return;
+                }
+
+                tiktokSubmitBtn.disabled = true;
+                tiktokSubmitBtn.innerText = "Memproses...";
+                tiktokResultDiv.innerHTML = "Sedang mencari video...";
+
+                try {
+                    const response = await fetch('/api/tiktok', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: url }),
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Gagal mengambil video');
+
+                    tiktokResultDiv.innerHTML = `
+                        <p>Video ditemukan!</p>
+                        <a href="${data.downloadUrl}" class="download-link" target="_blank" rel="noopener noreferrer" download>
+                            Klik Di Sini Untuk Mengunduh
+                        </a>
+                        <p style="font-size: 0.8rem; margin-top: 10px;">(Jika tidak terunduh, klik kanan dan pilih "Save link as...")</p>
+                    `;
+                } catch (error) {
+                    tiktokResultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                } finally {
+                    tiktokSubmitBtn.disabled = false;
+                    tiktokSubmitBtn.innerText = "Unduh Tanpa WM";
+                }
+            });
+
+            // --- [BARU] TAB 4: IP LOOKUP ---
+            const ipForm = document.getElementById('ipForm');
+            const ipSubmitBtn = document.getElementById('ip-submit-btn');
+            const ipResultDiv = document.getElementById('ip-result');
+
+            ipForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const ip = document.getElementById('ip-address').value;
+                if (!ip) {
+                    ipResultDiv.innerHTML = "Silakan masukkan IP atau domain.";
+                    return;
+                }
+
+                ipSubmitBtn.disabled = true;
+                ipSubmitBtn.innerText = "Mencari...";
+                ipResultDiv.innerHTML = "Sedang melacak IP...";
+
+                try {
+                    const response = await fetch('/api/ip-lookup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ip: ip }),
+                    });
+                    const data = await response.json();
+
+                    if (!response.ok || data.status === 'fail') {
+                        throw new Error(data.error || data.message || 'Gagal mengambil data');
+                    }
+                    
+                    // Buat tabel hasil
+                    ipResultDiv.innerHTML = `
+                        <table id="ip-result-table">
+                            <tr><td>IP</td><td>${data.query}</td></tr>
+                            <tr><td>Negara</td><td>${data.country} (${data.countryCode})</td></tr>
+                            <tr><td>Kota</td><td>${data.city}, ${data.regionName}</td></tr>
+                            <tr><td>Kode Pos</td><td>${data.zip}</td></tr>
+                            <tr><td>ISP</td><td>${data.isp}</td></tr>
+                            <tr><td>Organisasi</td><td>${data.org}</td></tr>
+                            <tr><td>ASN</td><td>${data.as}</td></tr>
+                            <tr><td>Timezone</td><td>${data.timezone}</td></tr>
+                            <tr><td>Koordinat</td><td>${data.lat}, ${data.lon}</td></tr>
+                        </table>
+                    `;
+
+                } catch (error) {
+                    ipResultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                } finally {
+                    ipSubmitBtn.disabled = false;
+                    ipSubmitBtn.innerText = "Lacak IP";
+                }
+            });
+
+
+            // --- TAB 5: AI CHAT ---
+            const aiForm = document.getElementById('aiForm');
+            const aiSubmitBtn = document.getElementById('ai-submit-btn');
+            const aiResultDiv = document.getElementById('ai-result');
+
+            aiForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const prompt = document.getElementById('ai-prompt').value;
+                if (!prompt) {
+                    aiResultDiv.innerText = "Silakan masukkan prompt terlebih dahulu.";
+                    return;
+                }
+
+                aiSubmitBtn.disabled = true;
+                aiSubmitBtn.innerText = "Memproses...";
+                aiResultDiv.innerText = "AI sedang berpikir...";
+
+                try {
+                    const response = await fetch('/api/gemini', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: prompt }),
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    aiResultDiv.innerText = data.reply;
+                } catch (error) {
+                    console.error('Error:', error);
+                    aiResultDiv.innerText = "Terjadi kesalahan saat menghubungi AI. Coba lagi nanti.";
+                } finally {
+                    aiSubmitBtn.disabled = false;
+                    aiSubmitBtn.innerText = "Kirim ke AI";
+                }
+            });
+
+        }); // Akhir dari DOMContentLoaded
+    </script>
+
+</body>
+</html>
