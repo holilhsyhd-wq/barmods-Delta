@@ -30,4 +30,3 @@ export default async function handler(request, response) {
     response.status(500).json({ error: 'Terjadi kesalahan pada server' });
   }
 }
-
