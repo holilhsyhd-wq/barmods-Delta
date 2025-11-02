@@ -1,0 +1,9 @@
+{
+  "name": "barmods-app",
+  "version": "1.0.0",
+  "description": "A multi-tool app with Vercel backend",
+  "dependencies": {
+    "@google/generative-ai": "^0.11.3",
+    "tiktok-grabber-without-watermark": "^1.1.2"
+  }
+}
