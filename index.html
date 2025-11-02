@@ -17,20 +17,29 @@
             --border-color: #4a4a7e;
         }
 
+        /* [PERBAIKAN CSS] */
+        * {
+            box-sizing: border-box; /* Memastikan padding tidak merusak layout */
+        }
+        
+        html, body {
+            height: 100%; /* Pastikan body mengambil tinggi penuh */
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
+            display: flex; 
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             margin: 0;
-            padding: 0; 
-            box-sizing: border-box;
-            overflow: hidden;
+            padding: 10px; /* Beri sedikit padding pada body */
+            overflow-x: hidden; /* Sembunyikan scroll horizontal */
+            overflow-y: auto; /* Izinkan scroll vertikal jika perlu */
         }
         
+        /* --- Layar Interaksi Awal (Tanpa Teks) --- */
         #interaction-screen {
             position: fixed;
             top: 0;
@@ -45,6 +54,7 @@
             cursor: pointer;
         }
 
+        /* --- Halaman Loading --- */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -65,25 +75,23 @@
             object-fit: contain;
         }
 
+        /* --- [PERBAIKAN CSS] Halaman Login --- */
         #login-screen {
             display: none;
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 10px; /* Padding untuk layar kecil */
         }
 
         .login-box {
-            width: 100%;
-            max-width: 400px;
+            width: 100%; 
+            max-width: 400px; 
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 24px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
-            box-sizing: border-box;
         }
 
         #login-error {
@@ -93,25 +101,24 @@
             display: none; 
         }
 
+
+        /* --- [PERBAIKAN CSS] Kontainer Aplikasi Utama --- */
         .container {
             display: none; 
-            width: 100%;
-            max-width: 400px;
+            width: 100%; 
+            max-width: 400px; 
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 24px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
-            box-sizing: border-box;
-            margin: 20px;
+            margin: 20px 0; /* Margin atas/bawah, 0 untuk kiri/kanan */
         }
 
         .header-video {
-            width: 100%;
-            height: auto;
+            width: 100%; 
+            height: auto; 
             display: block;
-            margin-left: auto;
-            margin-right: auto;
             border-radius: 8px; 
             margin-bottom: 20px; 
             background-color: #000;
@@ -125,6 +132,7 @@
             margin-top: 0;
             margin-bottom: 24px;
             letter-spacing: 1px;
+            font-size: 1.5rem; /* Sesuaikan ukuran font */
         }
 
         .tab-nav {
@@ -136,13 +144,12 @@
         }
 
         .tab-button {
-            flex: 1;
-            min-width: 70px; /* Dikecilkan sedikit untuk 5 tab */
-            padding: 10px 5px;
+            flex: 1 1 auto; /* Izinkan tombol mengecil dan membesar */
+            padding: 10px 8px; /* Padding disesuaikan */
             background-color: transparent;
             border: none;
             color: #c0c0e0;
-            font-size: 0.75rem;
+            font-size: 0.75rem; /* Font kecil agar muat di 1 baris */
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -181,7 +188,6 @@
             border-radius: 8px;
             color: var(--text-color);
             font-size: 1rem;
-            box-sizing: border-box;
         }
         
         textarea.form-control {
@@ -242,7 +248,6 @@
             object-fit: cover;
         }
         
-        /* CSS Untuk Hasil (AI, TikTok, IP) */
         #ai-result, #tiktok-result, #ip-result {
             font-size: 0.95rem;
             color: #c0c0e0;
@@ -276,7 +281,6 @@
             background-color: #8a00e0;
         }
 
-        /* [BARU] Tabel untuk hasil IP Lookup */
         #ip-result-table {
             width: 100%;
             border-collapse: collapse;
@@ -284,11 +288,13 @@
         #ip-result-table td {
             padding: 8px 4px;
             border-bottom: 1px solid var(--border-color);
+            word-break: break-word; /* [PERBAIKAN] Agar ISP panjang tidak merusak layout */
         }
         #ip-result-table td:first-child {
             font-weight: 700;
             color: white;
             width: 30%;
+            min-width: 80px; /* Lebar minimum untuk label */
         }
 
     </style>
@@ -336,7 +342,8 @@
             <button class="tab-button active" data-tab="tab-wa">Kirim Pesan</button>
             <button class="tab-button" data-tab="tab-osint">OSINT</button>
             <button class="tab-button" data-tab="tab-tiktok">TikTok DL</button>
-            <button class="tab-button" data-tab="tab-ip">IP Lookup</button> <button class="tab-button" data-tab="tab-ai">AI Chat</button>
+            <button class="tab-button" data-tab="tab-ip">IP Lookup</button>
+            <button class="tab-button" data-tab="tab-ai">AI Chat</button>
         </div>
 
         <div id="tab-wa" class="tab-content active">
@@ -350,7 +357,7 @@
                     <label for="template">Pilih metode bug</label>
                     <select id="template" class="form-control" required>
                         <option value="" disabled selected>by barmods</option>
-                        <option value="BARMODS AmpasꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾYFailure">delay biasa</option>
+                        <option value="BARMODS AmpasꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦾꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦽꦾꦾꦾꦾComplete">delay biasa</option>
                         <option value="blm gw set">delta 2023</option>
                         <option value="masih proses?">blank</option>
                         <option value="crash">crash</option>
@@ -365,7 +372,11 @@
                 <div class="form-group">
                     <label for="osint-phone">Target Number</label>
                     <input type="text" id="osint-phone" class="form-control" placeholder="Tempel nomor dari tab 'Kirim Pesan'">
-Dork</button>
+                </div>
+                <p style="font-size: 0.8rem; text-align: center; color: #c0c0e0; margin-top: -10px; margin-bottom: 20px;">
+                    Ini akan mencari nomor di Google (Facebook, Instagram, TikTok, dll.)
+                </p>
+                <button typeb"submit" class="btn-submit">Lacak via Google Dork</button>
             </form>
         </div>
 
@@ -394,23 +405,23 @@ Dork</button>
         </div>
 
 
-        <div id="tab-ai" class.content">
+        <div id="tab-ai" class="tab-content">
             <form id="aiForm">
-                <div class.group">
+                <div class="form-group">
                     <label for="ai-prompt">Tanya Apa Saja ke AI</label>
-                    <textarea id="ai-prompt" class.control" rows="3" placeholder="Contoh: jelaskan apa itu OSINT"></textarea>
+                    <textarea id="ai-prompt" class="form-control" rows="3" placeholder="Contoh: jelaskan apa itu OSINT"></textarea>
                 </div>
-                <button type="submit" id="ai-submit-btn" class.submit">Kirim ke AI</button>
+                <button type="submit" id="ai-submit-btn" class="btn-submit">Kirim ke AI</button>
             </form>
-            <div class.group" style="margin-top: 20px;">
+            <div class="form-group" style="margin-top: 20px;">
                 <label for="ai-result">Jawaban AI:</label>
                 <div id="ai-result">Waiting for prompt...</div>
             </div>
         </div>
 
         <div class="image-container">
-            <img src="https://img1.pixhost.to/images/9872/657034725_offc.jpg" alt="Foto 1" class.image">
-            <img src="https://img1.pixhost.to/images/9872/657034725_offc.jpg" alt="Foto 2" class.image">
+            <img src="https://img1.pixhost.to/images/9872/657034725_offc.jpg" alt="Foto 1" class="side-image">
+            <img src="https://img1.pixhost.to/images/9872/657034725_offc.jpg" alt="Foto 2" class="side-image">
         </div>
     </div>
 
@@ -439,10 +450,12 @@ Dork</button>
                 interactionScreen.style.display = 'none'; 
                 loadingScreen.style.display = 'flex';
                 
+                // Coba putar video dengan suara
                 var playPromise = introVideo.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(error => {
                         console.warn("Autoplay video dengan suara gagal:", error);
+                        // Jika GAGAL, mainkan tanpa suara
                         introVideo.muted = true;
                         introVideo.play();
                     });
@@ -463,7 +476,7 @@ Dork</button>
                 }, 500); 
 
                 loginScreen.style.display = 'flex';
-                document.body.style.overflow = 'auto'; 
+                document.body.style.overflow = 'auto'; // Kembalikan scrollbar
             }
 
             // 4. Saat tombol login diklik
@@ -472,9 +485,11 @@ Dork</button>
                 const user = document.getElementById('username').value;
                 const pass = document.getElementById('password').value;
 
+                // Login Sederhana (Tidak Aman, tapi sesuai permintaan)
                 if (user === 'barmods21' && pass === 'barmods') {
                     loginScreen.style.display = 'none';
                     mainApp.style.display = 'block'; 
+                    // Putar musik latar setelah login berhasil
                     backgroundMusic.play().catch(error => {
                         console.warn("Autoplay musik latar gagal:", error);
                     });
@@ -577,8 +592,8 @@ Dork</button>
                     tiktokSubmitBtn.innerText = "Unduh Tanpa WM";
                 }
             });
-
-            // --- [BARU] TAB 4: IP LOOKUP ---
+            
+            // --- TAB 4: IP LOOKUP ---
             const ipForm = document.getElementById('ipForm');
             const ipSubmitBtn = document.getElementById('ip-submit-btn');
             const ipResultDiv = document.getElementById('ip-result');
@@ -607,21 +622,19 @@ Dork</button>
                         throw new Error(data.error || data.message || 'Gagal mengambil data');
                     }
                     
-                    // Buat tabel hasil
                     ipResultDiv.innerHTML = `
                         <table id="ip-result-table">
-                            <tr><td>IP</td><td>${data.query}</td></tr>
-                            <tr><td>Negara</td><td>${data.country} (${data.countryCode})</td></tr>
-                            <tr><td>Kota</td><td>${data.city}, ${data.regionName}</td></tr>
-                            <tr><td>Kode Pos</td><td>${data.zip}</td></tr>
-                            <tr><td>ISP</td><td>${data.isp}</td></tr>
-                            <tr><td>Organisasi</td><td>${data.org}</td></tr>
-                            <tr><td>ASN</td><td>${data.as}</td></tr>
-                            <tr><td>Timezone</td><td>${data.timezone}</td></tr>
-                            <tr><td>Koordinat</td><td>${data.lat}, ${data.lon}</td></tr>
+                            <tr><td>IP</td><td>${data.query || 'N/A'}</td></tr>
+                            <tr><td>Negara</td><td>${data.country || 'N/A'} (${data.countryCode || 'N/A'})</td></tr>
+                            <tr><td>Kota</td><td>${data.city || 'N/A'}, ${data.regionName || 'N/A'}</td></tr>
+                            <tr><td>Kode Pos</td><td>${data.zip || 'N/A'}</td></tr>
+                            <tr><td>ISP</td><td>${data.isp || 'N/A'}</td></tr>
+                            <tr><td>Organisasi</td><td>${data.org || 'N/A'}</td></tr>
+                            <tr><td>ASN</td><td>${data.as || 'N/A'}</td></tr>
+                            <tr><td>Timezone</td><td>${data.timezone || 'N/A'}</td></tr>
+                            <tr><td>Koordinat</td><td>${data.lat || 'N/A'}, ${data.lon || 'N/A'}</td></tr>
                         </table>
                     `;
-
                 } catch (error) {
                     ipResultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
                 } finally {
@@ -629,7 +642,6 @@ Dork</button>
                     ipSubmitBtn.innerText = "Lacak IP";
                 }
             });
-
 
             // --- TAB 5: AI CHAT ---
             const aiForm = document.getElementById('aiForm');
